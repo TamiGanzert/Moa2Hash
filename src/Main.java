@@ -2,13 +2,16 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 class Main {
 
     private static HashMap<Integer,Integer> linhas = new HashMap<Integer,Integer>();
     private static HashMap<Integer,Double> custos = new HashMap<Integer,Double>();
+    private static List<Integer> vezesLinhaCoberta = new ArrayList<Integer>();
     
     private static int numLinhas = 0;
     private static int numColunas = 0;
@@ -47,6 +50,7 @@ class Main {
             
             for (int j = 3; j < infoslinha.length; j++) {                
                 leLinhaPorColuna(i, custo, Integer.parseInt(infoslinha[j]));
+                vezesLinhaCoberta.set(Integer.parseInt(infoslinha[j]), vezesLinhaCoberta.get(Integer.parseInt(infoslinha[j])) + 1);
             }
         }
     }
