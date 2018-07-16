@@ -10,7 +10,8 @@ import java.util.Scanner;
 
 
 class Main {
-    public static HashMap<Integer,Integer> linhas = new HashMap<Integer,Integer>();
+    private static List<Integer> linhasPorColuna = new ArrayList<Integer>();
+    public static HashMap<Integer,List<Integer>> colunas = new HashMap<Integer,List<Integer>>();
     public static HashMap<Integer,Double> custos = new HashMap<Integer,Double>();
     public static List<Integer> vezesLinhaCoberta = new ArrayList<Integer>(); //Conta quantas vezes aquela linha foi coberta
                                                                               //Ainda não implemnetado, não sei como fazer
@@ -53,15 +54,25 @@ class Main {
             String infoslinha[] = leLinha.split("\\s+");            
             double custo = Double.parseDouble(infoslinha[2]);
             
+            linhasPorColuna = new ArrayList<Integer>();
             for (int j = 3; j < infoslinha.length; j++) {                
-                leLinhaPorColuna(i, custo, Integer.parseInt(infoslinha[j]));
-                vezesLinhaCoberta.set(Integer.parseInt(infoslinha[j]), vezesLinhaCoberta.get(Integer.parseInt(infoslinha[j])) + 1);
+                leCustos(i, custo);
+                linhasPorColuna.add(Integer.parseInt(infoslinha[j]));
             }
+            
+            colunas.put(i, linhasPorColuna);
         }
-    }
+    }   
     
-    public static void leLinhaPorColuna(int coluna, double custo, int linha){
-        linhas.put(linha, coluna);
+    public static void leCustos(int coluna, double custo){
         custos.put(coluna, custo);
     }        
+    
+    public static void contaVezesLinhaDescoberta(){
+        Integer contador;
+        colunas.keySet().stream().forEach((linha) -> {
+            List<Integer> coluna = colunas.get(linha);
+            System.out.println(coluna);
+        });
+    }
 }
