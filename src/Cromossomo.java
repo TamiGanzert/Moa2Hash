@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 
-
 class Cromossomo{
-     //Lista de indices das colunas que pertencem a solução
     private ArrayList<Integer> colunas;
     private double custoTotal;
     private int[] qtdColunaCobreLinha;
@@ -12,28 +10,28 @@ class Cromossomo{
         custoTotal = 0;
     }
     
-    public Cromossomo(ArrayList<Integer> colunas, ArrayList<Integer>[] listaColuna, ArrayList<Integer>[] listaLinha, Double[] listaCusto){
+    public Cromossomo(ArrayList<Integer> colunas){
         this();
-        qtdColunaCobreLinha = new int[listaLinha.length];
-        for (Integer coluna : colunas) {
-            addColuna(coluna, listaCusto[coluna], listaColuna);
-        }
+        qtdColunaCobreLinha = new int[Main.colunaPorLinhas.length];
+        colunas.forEach((coluna) -> {
+            addColuna(coluna, Main.custos[coluna]);
+        });
     }
     
-    public void addColuna(int coluna, double custo, ArrayList<Integer>[] listaColuna){
+    public void addColuna(int coluna, double custo){
         if (colunas.contains(coluna)){
             return;
         }
         colunas.add(coluna);
         custoTotal += custo;
-        for (Integer linha : listaColuna[coluna]) {
+        Main.linhasPorColuna[coluna].forEach((linha) -> {
             qtdColunaCobreLinha[linha]++;
-        }
+        });
     }
     
-    public void removeColuna(int coluna, Double[] listaCusto){
+    public void removeColuna(int coluna){
         colunas.remove(new Integer(coluna));
-        custoTotal = custoTotal - listaCusto[coluna];
+        custoTotal = custoTotal - mainClass.custos[coluna];
     }
 
     public ArrayList<Integer> getColunas() {
@@ -46,31 +44,31 @@ class Cromossomo{
     
     public void gerarIndividuo(){
         ArrayList<Integer> linhasDescobertas = new ArrayList<>();
-        for (int i = 0; i < listaLinha.length; i++) {
+        for (int i = 0; i < Main.numLinhas; i++) {
             linhasDescobertas.add(i);
         }
         
-        qtdColunaCobreLinha = new int[listaLinha.length];
+        qtdColunaCobreLinha = new int[Main.colunaPorLinhas.length];
         
         while (!linhasDescobertas.isEmpty()){
             int random_pos = Util.getRandomInt(linhasDescobertas.size());
             int linha = linhasDescobertas.get(random_pos);
             
-            ArrayList<Integer> conjuntoColuna = listaLinha[linha];
-            int menorColuna = colunaMinimizaCusto(conjuntoColuna, linhasDescobertas, listaColuna, listaCusto);
+            ArrayList<Integer> conjuntoColuna = Main.colunaPorLinhas[linha];
+            int menorColuna = minCusto(conjuntoColuna, linhasDescobertas);
             
-            this.addColuna(menorColuna, listaCusto[menorColuna], listaColuna);
-            linhasDescobertas.removeAll(listaColuna[menorColuna]);
+            this.addColuna(menorColuna, Main.custos[menorColuna]);
+            linhasDescobertas.removeAll(Main.linhasPorColuna[menorColuna]);
         }
     }
     
-    private static int colunaMinimizaCusto(ArrayList<Integer> conjuntoColuna, ArrayList<Integer> linhasDescobertas, ArrayList<Integer>[] listaColuna, Double[] listaCusto){
+    private static int minCusto(ArrayList<Integer> conjuntoColuna, ArrayList<Integer> linhasDescobertas){
         double menor = Double.MAX_VALUE;
         int menorColuna = -1;
         for (int i = 0; i < conjuntoColuna.size(); i++) {
             int coluna = conjuntoColuna.get(i);
-            double custo = listaCusto[coluna];
-            int intersecao_size = Util.intersecao(linhasDescobertas, listaColuna[coluna]).size();
+            double custo = mainClass.custos[coluna];
+            int intersecao_size = Util.intersecao(linhasDescobertas, mainClass.linhasPorColuna[coluna]).size();
             if ((custo / intersecao_size) < menor) {
                 menor = custo / intersecao_size;
                 menorColuna = coluna;
@@ -79,17 +77,17 @@ class Cromossomo{
         return menorColuna;
     }
     
-    public void eliminaRedundancia(ArrayList<Integer>[] listaColuna, Double[] listaCusto){
+    public void eliminaRedundancia(){
         ArrayList<Integer> T = new ArrayList<>(this.colunas);
         while (!T.isEmpty()){
             int random_pos = Util.getRandomInt(T.size());
             int coluna = T.get(random_pos);
             T.remove(random_pos);
             
-            if (isRedundante(listaColuna[coluna])){
-                removeColuna(coluna, listaCusto);
+            if (isRedundante(mainClass.linhasPorColuna[coluna])){
+                removeColuna(coluna);
                 
-                for (Integer linha : listaColuna[coluna]) {
+                for (Integer linha : mainClass.linhasPorColuna[coluna]) {
                     qtdColunaCobreLinha[linha]--;
                 }
             }

@@ -62,8 +62,8 @@ class AlgoritmoGenetico{
         }
         
         ArrayList<Integer> uniao = Util.uniao(pai_x.getColunas(), pai_y.getColunas());
-        Cromossomo filho = new Cromossomo(uniao, listaColuna, listaLinha, listaCusto);
-        filho.eliminaRedundancia(listaColuna, listaCusto);
+        Cromossomo filho = new Cromossomo(uniao);
+        filho.eliminaRedundancia();
         return filho;
     }
     
@@ -71,10 +71,10 @@ class AlgoritmoGenetico{
         double random_double = Util.getRandomDouble();
         int n = (int)(random_double * C.getColunas().size());
         for (int i = 0; i < n; i++) {
-            int random_col = Util.getRandomInt(listaColuna.length);
-            C.addColuna(random_col, listaCusto[random_col], listaColuna);
+            int random_col = Util.getRandomInt(Main.linhasPorColuna.length);
+            C.addColuna(random_col, Main.custos[random_col]);
         }
-        C.eliminaRedundancia(listaColuna, listaCusto);
+        C.eliminaRedundancia();
     }
     
     public Double taxaMutacao(Double custoMaisApto, Double custoMenosApto){
