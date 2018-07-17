@@ -3,7 +3,6 @@ class Populacao{
     private final Cromossomo[] populacao;    
     private int posMaisApto;
     private int posMenosApto;
-    private Main mainClass;
     
     public Populacao(int tam_populacao) {
         this.tam_populacao = tam_populacao;

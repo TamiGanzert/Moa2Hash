@@ -21,7 +21,7 @@ class AlgoritmoGenetico{
             Cromossomo maisApto = populacao.maisApto();
             Cromossomo menosApto = populacao.menosApto();
             
-            double random_double = Util.getRandomDouble();
+            double random_double = Comuns.getRandomDouble();
             if (random_double < taxaMutacao(maisApto.getCustoTotal(), menosApto.getCustoTotal())){
                 mutacao(filho);
             }
@@ -44,7 +44,7 @@ class AlgoritmoGenetico{
     public Cromossomo selecao(){
         Cromossomo c = null;
         for (int i = 0; i < QTD_TORNEIO; i++) {
-            int random_pos = Util.getRandomInt(TAM_POPULACAO);
+            int random_pos = Comuns.getRandomInt(TAM_POPULACAO);
             Cromossomo rand = populacao.getPopulacao()[random_pos];
             if (c == null || rand.getCustoTotal() < c.getCustoTotal()){
                 c = rand;
@@ -61,17 +61,17 @@ class AlgoritmoGenetico{
             pai_y = selecao();
         }
         
-        ArrayList<Integer> uniao = Util.uniao(pai_x.getColunas(), pai_y.getColunas());
+        ArrayList<Integer> uniao = Comuns.uniao(pai_x.getColunas(), pai_y.getColunas());
         Cromossomo filho = new Cromossomo(uniao);
         filho.eliminaRedundancia();
         return filho;
     }
     
     public void mutacao(Cromossomo C){
-        double random_double = Util.getRandomDouble();
+        double random_double = Comuns.getRandomDouble();
         int n = (int)(random_double * C.getColunas().size());
         for (int i = 0; i < n; i++) {
-            int random_col = Util.getRandomInt(Main.linhasPorColuna.length);
+            int random_col = Comuns.getRandomInt(Main.linhasPorColuna.length);
             C.addColuna(random_col, Main.custos[random_col]);
         }
         C.eliminaRedundancia();

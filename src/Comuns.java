@@ -3,7 +3,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-class Utils{
+class Comuns{
     private static final Random random = new Random();
     
     public static int getRandomInt(int n){
@@ -16,11 +16,9 @@ class Utils{
     
     public static ArrayList<Integer> intersecao(ArrayList<Integer> lista1, ArrayList<Integer> lista2){
         ArrayList<Integer> intersec = new ArrayList<>();
-        for (Integer l1 : lista1) {
-            if(lista2.contains(l1)){
-                intersec.add(l1);
-            }
-        }
+        lista1.stream().filter((l1) -> (lista2.contains(l1))).forEachOrdered((l1) -> {
+            intersec.add(l1);
+        });
         return intersec;
     }
     
@@ -30,7 +28,7 @@ class Utils{
         set.addAll(lista1);
         set.addAll(lista2);
 
-        return new ArrayList<Integer>(set);
+        return new ArrayList<>(set);
     }
     
 }

@@ -31,7 +31,7 @@ class Cromossomo{
     
     public void removeColuna(int coluna){
         colunas.remove(new Integer(coluna));
-        custoTotal = custoTotal - mainClass.custos[coluna];
+        custoTotal = custoTotal - Main.custos[coluna];
     }
 
     public ArrayList<Integer> getColunas() {
@@ -51,7 +51,7 @@ class Cromossomo{
         qtdColunaCobreLinha = new int[Main.colunaPorLinhas.length];
         
         while (!linhasDescobertas.isEmpty()){
-            int random_pos = Util.getRandomInt(linhasDescobertas.size());
+            int random_pos = Comuns.getRandomInt(linhasDescobertas.size());
             int linha = linhasDescobertas.get(random_pos);
             
             ArrayList<Integer> conjuntoColuna = Main.colunaPorLinhas[linha];
@@ -67,8 +67,8 @@ class Cromossomo{
         int menorColuna = -1;
         for (int i = 0; i < conjuntoColuna.size(); i++) {
             int coluna = conjuntoColuna.get(i);
-            double custo = mainClass.custos[coluna];
-            int intersecao_size = Util.intersecao(linhasDescobertas, mainClass.linhasPorColuna[coluna]).size();
+            double custo = Main.custos[coluna];
+            int intersecao_size = Comuns.intersecao(linhasDescobertas, Main.linhasPorColuna[coluna]).size();
             if ((custo / intersecao_size) < menor) {
                 menor = custo / intersecao_size;
                 menorColuna = coluna;
@@ -80,27 +80,22 @@ class Cromossomo{
     public void eliminaRedundancia(){
         ArrayList<Integer> T = new ArrayList<>(this.colunas);
         while (!T.isEmpty()){
-            int random_pos = Util.getRandomInt(T.size());
+            int random_pos = Comuns.getRandomInt(T.size());
             int coluna = T.get(random_pos);
             T.remove(random_pos);
             
-            if (isRedundante(mainClass.linhasPorColuna[coluna])){
+            if (isRedundante(Main.linhasPorColuna[coluna])){
                 removeColuna(coluna);
                 
-                for (Integer linha : mainClass.linhasPorColuna[coluna]) {
+                Main.linhasPorColuna[coluna].forEach((linha) -> {
                     qtdColunaCobreLinha[linha]--;
-                }
+                });
             }
         }
     }
     
     private boolean isRedundante(ArrayList<Integer> conjuntoLinha){
-        for (Integer linha : conjuntoLinha) {
-            if (qtdColunaCobreLinha[linha] < 2){
-                return false;
-            }
-        }
-        return true;
+        return conjuntoLinha.stream().noneMatch((linha) -> (qtdColunaCobreLinha[linha] < 2));
     }    
 }
 
