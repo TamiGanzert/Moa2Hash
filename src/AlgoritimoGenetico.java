@@ -2,9 +2,9 @@ import java.util.ArrayList;
 
 class AlgoritmoGenetico{
     private static final int TAM_POPULACAO = 1000;
-    private static final double TAXA_MIN_MUTACAO = 1;
-    private static final int NUM_GERACOES = 2000;
-    public static final int QTD_TORNEIO = 1;
+    private static final double TAXA_MIN_MUTACAO = 0.05;
+    private static final int NUM_GERACOES = 500;
+    public static final int QTD_TORNEIO = 2;
     
     private final Populacao populacao;
     
